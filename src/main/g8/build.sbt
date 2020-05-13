@@ -3,6 +3,20 @@ import Dependencies._
 ThisBuild / organization := "$organization;format="lower,package"$"
 ThisBuild / scalaVersion := "2.13.2"
 ThisBuild / version := "0.0.1-SNAPSHOT"
+Global / onChangedBuildSource := ReloadOnSourceChanges
+
+Test / parallelExecution := false
+Test / testOptions += Tests.Argument(TestFrameworks.ScalaTest, "-oSD")
+Test / turbo := true
+
+ThisBuild / autoStartServer := false
+ThisBuild / includePluginResolvers := true
+ThisBuild / turbo := true
+ThisBuild / useSuperShell := false
+
+ThisBuild / watchBeforeCommand := Watch.clearScreen
+ThisBuild / watchTriggeredMessage := Watch.clearScreenOnTrigger
+ThisBuild / watchForceTriggerOnAnyChange := true
 
 ThisBuild / scalacOptions ++= Seq(
   "-deprecation",
@@ -19,16 +33,13 @@ lazy val `$name;format="norm"$` =
     .in(file("."))
     .settings(
       name := "$name$",
-      addCompilerPlugin(org.typelevel.`kind-projector`),
+      addCompilerPlugin(`kind-projector`),
       libraryDependencies ++= Seq(
         // main dependencies
       ),
       libraryDependencies ++= Seq(
-        com.github.alexarchambault.`scalacheck-shapeless_1.14`,
-        org.scalacheck.scalacheck,
-        org.scalatest.scalatest,
-        org.scalatestplus.`scalatestplus-scalacheck`
-      ).map(_ % Test),
+        scalaTest % Test
+      ),
       Compile / console / scalacOptions --= Seq(
         "-Wunused:_",
         "-Xfatal-warnings"
